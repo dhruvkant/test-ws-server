@@ -12,19 +12,19 @@ wss.on('connection', function connection(ws) {
         console.log(
           'sending CALL_STATE_UPDATE, PTT_STATE_UPDATE, CALLEE_STATE_UPDATE'
         );
-        ws.send({
+        ws.send(JSON.stringify({
           messageType: 'CALL_STATE_UPDATE',
           callId: '343',
           callStateChange: 'ESTABLISHED',
           reason: 'dfdf',
-        });
-        ws.send({
+        }));
+        ws.send(JSON.stringify({
           messageType: 'PTT_STATE_UPDATE',
           pttState: 'FREE',
-        });
+        }));
         if (this.callStateError === 'ALL_CALLEES_BUSY') {
           parsedData.callees?.forEach((currentCallee) => {
-            ws.send({
+            ws.send(JSON.stringify({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'BUSY',
@@ -32,11 +32,11 @@ wss.on('connection', function connection(ws) {
                 uid: currentCallee.uid,
                 calleeType: currentCallee.calleeType,
               },
-            });
+            }));
           });
         } else if (this.callErrorState === 'USERS_UNAVAILABLE') {
           // the first callee is in IN_CALL state
-          ws.send({
+          ws.send(JSON.stringify({
             messageType: 'CALLEE_STATE_UPDATE',
             callId: '343',
             calleeState: 'BUSY', //Record 1
@@ -44,10 +44,10 @@ wss.on('connection', function connection(ws) {
               uid: parsedData.callees[0].uid,
               calleeType: parsedData.callees[0].calleeType,
             },
-          });
+          }));
           // the second callee is in OUT_OF_CALL state
           if (parsedData.callees[1]) {
-            ws.send({
+            ws.send(JSON.stringify({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'IN_CALL', //Record 2
@@ -55,11 +55,11 @@ wss.on('connection', function connection(ws) {
                 uid: parsedData.callees[1].uid,
                 calleeType: parsedData.callees[1].calleeType,
               },
-            });
+            }));
           }
           // the third callee is in BUSY state
           if (parsedData.callees[2]) {
-            ws.send({
+            ws.send(JSON.stringify({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'NON_EXISTING', //record 3
@@ -67,11 +67,11 @@ wss.on('connection', function connection(ws) {
                 uid: parsedData.callees[2].uid,
                 calleeType: parsedData.callees[2].calleeType,
               },
-            });
+            }));
           }
         } else {
           // the first callee is in IN_CALL state
-          ws.send({
+          ws.send(JSON.stringify({
             messageType: 'CALLEE_STATE_UPDATE',
             callId: '343',
             calleeState: 'BUSY', // record 1
@@ -79,10 +79,10 @@ wss.on('connection', function connection(ws) {
               uid: parsedData.callees[0].uid,
               calleeType: parsedData.callees[0].calleeType,
             },
-          });
+          }));
           // the second callee is in OUT_OF_CALL state
           if (parsedData.callees[1]) {
-            ws.send({
+            ws.send(JSON.stringify({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'IN_CALL', //Record 2
@@ -90,11 +90,11 @@ wss.on('connection', function connection(ws) {
                 uid: parsedData.callees[1].uid,
                 calleeType: parsedData.callees[1].calleeType,
               },
-            });
+            }));
           }
           // the third callee is in BUSY state
           if (parsedData.callees[2]) {
-            ws.send({
+            ws.send(JSON.stringify({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'NON_EXISTING', //record 3
@@ -102,7 +102,7 @@ wss.on('connection', function connection(ws) {
                 uid: parsedData.callees[2].uid,
                 calleeType: parsedData.callees[2].calleeType,
               },
-            });
+            }));
           }
           // the fourth callee is in OFFLINE state
           // if (parsedData.callees[3]) {
@@ -127,13 +127,13 @@ wss.on('connection', function connection(ws) {
         console.log(
           'sending CALL_STATE_UPDATE, PTT_STATE_UPDATE, CALLEE_STATE_UPDATE'
         );
-        ws.send({
+        ws.send(JSON.stringify({
           messageType: 'CALL_STATE_UPDATE',
           callId: '343',
           callStateChange: 'ESTABLISHED',
           reason: 'dfdf',
-        });
-        ws.send({
+        }));
+        ws.send(JSON.stringify({
           messageType: 'CALLEE_STATE_UPDATE',
           callId: '343',
           calleeState: 'IN_CALL',
@@ -141,59 +141,59 @@ wss.on('connection', function connection(ws) {
             uid: parsedData.callee.uid,
             calleeType: parsedData.callee.calleeType,
           },
-        });
+        }));
         this.callee = {
           uid: parsedData.callee.uid,
           calleeType: parsedData.callee.calleeType,
         };
-        ws.send({
+        ws.send(JSON.stringify({
           messageType: 'PTT_STATE_UPDATE',
           // pttState: 'FREE',
           // pttState: 'ASSIGNED_THIS_USER',
           pttState: 'ASSIGNED_OTHER_USER',
           pttOwner: this.callee,
-        });
+        }));
         break;
       case 'REQUEST_PTT':
         if (this.pttAssignment.assignment !== 'currentUser') {
           console.log('sending PTT_STATE_UPDATE - ASSIGNED_OTHER_USER');
-          ws.send({
+          ws.send(JSON.stringify({
             messageType: 'PTT_STATE_UPDATE',
             pttState: 'ASSIGNED_OTHER_USER',
             pttOwner: this.callee,
-          });
+          }));
         } else {
           console.log('sending PTT_STATE_UPDATE - ASSIGNED_THIS_USER');
-          ws.send({
+          ws.send(JSON.stringify({
             messageType: 'PTT_STATE_UPDATE',
             pttState: 'ASSIGNED_THIS_USER',
-          });
+          }));
         }
         break;
       case 'RELEASE_PTT':
         console.log('sending PTT_STATE_UPDATE - FREE');
-        ws.send({
+        ws.send(JSON.stringify({
           messageType: 'PTT_STATE_UPDATE',
           pttState: 'FREE',
-        });
+        }));
         break;
       case 'TERMINATE_CALL':
         console.log('CALL_STATE_UPDATE - TERMINATED');
-        ws.send({
+        ws.send(JSON.stringify({
           messageType: 'CALL_STATE_UPDATE',
           callId: '343',
           callStateChange: 'TERMINATED',
           reason: 'dfdf',
-        });
+        }));
         break;
       case 'REGISTER':
         console.log('received register command');
-        ws.send({
+        ws.send(JSON.stringify({
           messageType: 'REGISTRATION_STATE_UPDATE',
           registrationState: this.registerFail
             ? 'REGISTER_ERROR'
             : 'REGISTERED',
-        });
+        }));
         break;
     }
   });
