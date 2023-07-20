@@ -1,0 +1,12 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/dist-i18n
+/tmp
+/out-tsc
+/docker/dist
+/coverage
+
+# dependencies
+node_modules
