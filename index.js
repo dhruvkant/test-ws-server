@@ -5,7 +5,8 @@ const wss = new WebSocketServer({ port: PORT });
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function message(data) {
-    console.log('data received %s', data, data.messageType);
+    const parsedData = JSON.parse(data);
+    console.log('data received %s', data, parsedData.messageType);
     switch (data?.messageType) {
       case 'INITIATE_CALL':
         console.log(
