@@ -6,8 +6,8 @@ const wss = new WebSocketServer({ port: PORT });
 wss.on('connection', function connection(ws) {
   ws.on('message', function message(data) {
     const parsedData = JSON.parse(data);
-    console.log('data received %s', data, parsedData.messageType);
-    switch (data?.messageType) {
+    console.log('data received %s', parsedData);
+    switch (parsedData?.messageType) {
       case 'INITIATE_CALL':
         console.log(
           'sending CALL_STATE_UPDATE, PTT_STATE_UPDATE, CALLEE_STATE_UPDATE'
@@ -23,7 +23,7 @@ wss.on('connection', function connection(ws) {
           pttState: 'FREE',
         });
         if (this.callStateError === 'ALL_CALLEES_BUSY') {
-          data.callees?.forEach((currentCallee) => {
+          parsedData.callees?.forEach((currentCallee) => {
             ws.send({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
@@ -41,31 +41,31 @@ wss.on('connection', function connection(ws) {
             callId: '343',
             calleeState: 'BUSY', //Record 1
             callee: {
-              uid: data.callees[0].uid,
-              calleeType: data.callees[0].calleeType,
+              uid: parsedData.callees[0].uid,
+              calleeType: parsedData.callees[0].calleeType,
             },
           });
           // the second callee is in OUT_OF_CALL state
-          if (data.callees[1]) {
+          if (parsedData.callees[1]) {
             ws.send({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'IN_CALL', //Record 2
               callee: {
-                uid: data.callees[1].uid,
-                calleeType: data.callees[1].calleeType,
+                uid: parsedData.callees[1].uid,
+                calleeType: parsedData.callees[1].calleeType,
               },
             });
           }
           // the third callee is in BUSY state
-          if (data.callees[2]) {
+          if (parsedData.callees[2]) {
             ws.send({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'NON_EXISTING', //record 3
               callee: {
-                uid: data.callees[2].uid,
-                calleeType: data.callees[2].calleeType,
+                uid: parsedData.callees[2].uid,
+                calleeType: parsedData.callees[2].calleeType,
               },
             });
           }
@@ -76,51 +76,51 @@ wss.on('connection', function connection(ws) {
             callId: '343',
             calleeState: 'BUSY', // record 1
             callee: {
-              uid: data.callees[0].uid,
-              calleeType: data.callees[0].calleeType,
+              uid: parsedData.callees[0].uid,
+              calleeType: parsedData.callees[0].calleeType,
             },
           });
           // the second callee is in OUT_OF_CALL state
-          if (data.callees[1]) {
+          if (parsedData.callees[1]) {
             ws.send({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'IN_CALL', //Record 2
               callee: {
-                uid: data.callees[1].uid,
-                calleeType: data.callees[1].calleeType,
+                uid: parsedData.callees[1].uid,
+                calleeType: parsedData.callees[1].calleeType,
               },
             });
           }
           // the third callee is in BUSY state
-          if (data.callees[2]) {
+          if (parsedData.callees[2]) {
             ws.send({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
               calleeState: 'NON_EXISTING', //record 3
               callee: {
-                uid: data.callees[2].uid,
-                calleeType: data.callees[2].calleeType,
+                uid: parsedData.callees[2].uid,
+                calleeType: parsedData.callees[2].calleeType,
               },
             });
           }
           // the fourth callee is in OFFLINE state
-          // if (data.callees[3]) {
+          // if (parsedData.callees[3]) {
           //   ws.send({
           //     messageType: 'CALLEE_STATE_UPDATE',
           //     callId: '343',
           //     calleeState: 'OFFLINE',
           //     callee: {
-          //       uid: data.callees[3].uid,
-          //       calleeType: data.callees[3].calleeType,
+          //       uid: parsedData.callees[3].uid,
+          //       calleeType: parsedData.callees[3].calleeType,
           //     },
           //   });
           // }
         }
         // this would be useful in PTT state updates
         this.callee = {
-          uid: data.callees[0].uid,
-          calleeType: data.callees[0].calleeType,
+          uid: parsedData.callees[0].uid,
+          calleeType: parsedData.callees[0].calleeType,
         };
         break;
       case 'INITIATE_EMERGENCY_CALL':
@@ -138,13 +138,13 @@ wss.on('connection', function connection(ws) {
           callId: '343',
           calleeState: 'IN_CALL',
           callee: {
-            uid: data.callee.uid,
-            calleeType: data.callee.calleeType,
+            uid: parsedData.callee.uid,
+            calleeType: parsedData.callee.calleeType,
           },
         });
         this.callee = {
-          uid: data.callee.uid,
-          calleeType: data.callee.calleeType,
+          uid: parsedData.callee.uid,
+          calleeType: parsedData.callee.calleeType,
         };
         ws.send({
           messageType: 'PTT_STATE_UPDATE',
