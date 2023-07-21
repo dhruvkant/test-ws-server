@@ -70,52 +70,59 @@ wss.on('connection', function connection(ws) {
             }));
           }
         } else {
-          // the first callee is in IN_CALL state
-          ws.send(JSON.stringify({
-            messageType: 'CALLEE_STATE_UPDATE',
-            callId: '343',
-            calleeState: 'BUSY', // record 1
-            callee: {
-              uid: parsedData.callees[0].uid,
-              calleeType: parsedData.callees[0].calleeType,
-            },
-          }));
-          // the second callee is in OUT_OF_CALL state
-          if (parsedData.callees[1]) {
+          // There are some callees in the call.
+          if(Array.isArray(parsedData.callees)){
+            // the first callee is in IN_CALL state
             ws.send(JSON.stringify({
               messageType: 'CALLEE_STATE_UPDATE',
               callId: '343',
-              calleeState: 'IN_CALL', //Record 2
+              calleeState: 'BUSY', // record 1
               callee: {
-                uid: parsedData.callees[1].uid,
-                calleeType: parsedData.callees[1].calleeType,
+                uid: parsedData.callees[0].uid,
+                calleeType: parsedData.callees[0].calleeType,
               },
             }));
+            // the second callee is in OUT_OF_CALL state
+            if (parsedData.callees[1]) {
+              ws.send(JSON.stringify({
+                messageType: 'CALLEE_STATE_UPDATE',
+                callId: '343',
+                calleeState: 'IN_CALL', //Record 2
+                callee: {
+                  uid: parsedData.callees[1].uid,
+                  calleeType: parsedData.callees[1].calleeType,
+                },
+              }));
+            }
+            // the third callee is in BUSY state
+            if (parsedData.callees[2]) {
+              ws.send(JSON.stringify({
+                messageType: 'CALLEE_STATE_UPDATE',
+                callId: '343',
+                calleeState: 'NON_EXISTING', //record 3
+                callee: {
+                  uid: parsedData.callees[2].uid,
+                  calleeType: parsedData.callees[2].calleeType,
+                },
+              }));
+            }
+            // the fourth callee is in OFFLINE state
+            // if (parsedData.callees[3]) {
+            //   ws.send({
+            //     messageType: 'CALLEE_STATE_UPDATE',
+            //     callId: '343',
+            //     calleeState: 'OFFLINE',
+            //     callee: {
+            //       uid: parsedData.callees[3].uid,
+            //       calleeType: parsedData.callees[3].calleeType,
+            //     },
+            //   });
+            // }
+          }else{
+            // broadcast call active and callees are one group.
+            
           }
-          // the third callee is in BUSY state
-          if (parsedData.callees[2]) {
-            ws.send(JSON.stringify({
-              messageType: 'CALLEE_STATE_UPDATE',
-              callId: '343',
-              calleeState: 'NON_EXISTING', //record 3
-              callee: {
-                uid: parsedData.callees[2].uid,
-                calleeType: parsedData.callees[2].calleeType,
-              },
-            }));
-          }
-          // the fourth callee is in OFFLINE state
-          // if (parsedData.callees[3]) {
-          //   ws.send({
-          //     messageType: 'CALLEE_STATE_UPDATE',
-          //     callId: '343',
-          //     calleeState: 'OFFLINE',
-          //     callee: {
-          //       uid: parsedData.callees[3].uid,
-          //       calleeType: parsedData.callees[3].calleeType,
-          //     },
-          //   });
-          // }
+          
         }
         // this would be useful in PTT state updates
         this.callee = {
