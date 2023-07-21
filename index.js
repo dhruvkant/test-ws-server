@@ -118,17 +118,18 @@ wss.on('connection', function connection(ws) {
             //     },
             //   });
             // }
+
+            // this would be useful in PTT state updates
+            this.callee = {
+              uid: parsedData.callees[0].uid,
+              calleeType: parsedData.callees[0].calleeType,
+            };
           }else{
             // broadcast call active and callees are one group.
             
           }
           
-        }
-        // this would be useful in PTT state updates
-        this.callee = {
-          uid: parsedData.callees[0].uid,
-          calleeType: parsedData.callees[0].calleeType,
-        };
+        }     
         break;
       case 'INITIATE_EMERGENCY_CALL':
         console.log(
