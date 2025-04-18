@@ -14,5 +14,5 @@ wss.on('connection', function connection(ws) {
     });
   });
 
-  setTimeout(() => {wss._socket.destroy()}, 20000)
+  setTimeout(() => {ws._socket.destroy()}, 20000)
 });
