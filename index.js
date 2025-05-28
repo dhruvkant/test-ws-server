@@ -14,5 +14,7 @@ wss.on('connection', function connection(ws) {
     });
   });
 
-  // setTimeout(() => {ws._socket.destroy()}, 20000)
+  setInterval(() => {
+    console.log("Printing ping in every 14 minutes");
+  }, 840000);
 });
