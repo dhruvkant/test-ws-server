@@ -4,7 +4,7 @@ import WebSocket, { WebSocketServer } from "ws";
 const EXPRESS_PORT = process.env.EXPRESS_PORT || 3333;
 var app = express();
 app.listen(EXPRESS_PORT, () => {
-  console.log("Server running on port 3333");
+  console.log("Server running on port: ", EXPRESS_PORT);
 });
 
 app.get("/ping", (req, res, next) => {
