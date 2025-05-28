@@ -13,8 +13,4 @@ wss.on('connection', function connection(ws) {
       }
     });
   });
-
-  setInterval(() => {
-    console.log("Printing ping in every 14 minutes");
-  }, 840000);
 });
