@@ -1,9 +1,9 @@
 import express from "express";
 import WebSocket, { WebSocketServer } from "ws";
 
-const PORT = process.env.PORT || 3000;
+const EXPRESS_PORT = process.env.EXPRESS_PORT || 3333;
 var app = express();
-app.listen(PORT, () => {
+app.listen(EXPRESS_PORT, () => {
   console.log("Server running on port 3333");
 });
 
@@ -11,6 +11,7 @@ app.get("/ping", (req, res, next) => {
   res.json({ message: "Ping received" });
 });
 
+const PORT = process.env.PORT || 3000;
 const wss = new WebSocketServer({ port: PORT });
 
 wss.on("connection", function connection(ws) {
